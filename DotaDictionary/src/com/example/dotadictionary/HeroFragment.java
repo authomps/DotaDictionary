@@ -1,6 +1,5 @@
 package com.example.dotadictionary;
 
-
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -24,7 +23,7 @@ public class HeroFragment extends Fragment {
         }
 
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.article_view, container, false);
+        return inflater.inflate(R.layout.hero_view, container, false);
     }
 
     @Override
@@ -46,8 +45,8 @@ public class HeroFragment extends Fragment {
     }
 
     public void updateArticleView(int position) {
-        TextView article = (TextView) getActivity().findViewById(R.id.article);
-        article.setText(Ipsum.Articles[position]);
+    	TextView hero = (TextView) getActivity().findViewById(R.id.hero);
+        hero.setText(Filler.Articles[position]);
         mCurrentPosition = position;
     }
 
