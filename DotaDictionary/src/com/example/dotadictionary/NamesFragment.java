@@ -10,8 +10,9 @@ import android.widget.ListView;
 
 public class NamesFragment extends ListFragment {
     OnHeroSelectedListener mCallback;
+    
 
-    // The container Activity must implement this interface so the frag can deliver messages
+    // The container Activity must implement this interface so the fragment can deliver messages
     public interface OnHeroSelectedListener {
         /** Called by HeadlinesFragment when a list item is selected */
         public void onHeroSelected(int position);
