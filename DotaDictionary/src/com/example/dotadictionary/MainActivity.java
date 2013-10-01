@@ -21,11 +21,12 @@ import com.example.dotadictionary.NamesFragment.OnHeroSelectedListener;
 public class MainActivity extends FragmentActivity implements OnHeroSelectedListener {
 
 	String url_name;
-	String html;
+	String data;
+	static String[] names;
 	
 	// Setter for html
 	private void setHtml(String o) {
-		html = o;
+		data = o;
 	}
 	  
 	@Override
@@ -33,17 +34,16 @@ public class MainActivity extends FragmentActivity implements OnHeroSelectedList
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		// Initialize url and html
+		// Initialize url and data
 		url_name = "https://docs.google.com/spreadsheet/pub?key=0ApYAGkG5V1-NdEdXLTJMdjR2MEdKRUJ1MWs0alRkRVE&single=true&gid=0&output=csv";
-//		url_name = "http://www.wikipedia.org/"; // TODO place url string in R
-		html = ""; // TODO maybe create empty string in R
+		data = ""; // TODO maybe create empty string in R
 		
 		// Check if previous state is being restored
 		if (savedInstanceState != null) {
             return;
         }
 		
-		// Grab html code
+		// Grab data
 		URL url;
 		final HttpURLConnection urlConnection;
 		// TODO clean up this code
@@ -88,10 +88,15 @@ public class MainActivity extends FragmentActivity implements OnHeroSelectedList
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		// TODO output errors with try catches
-		Toast.makeText(MainActivity.this, html, Toast.LENGTH_LONG).show();
-		Log.d("MainActivity",html); // TODO remove
+		
+		// TODO comment
+		String[] heroes = data.split("\n");
+		names = new String[heroes.length-1];
+		for (int i=0; i < heroes.length-1; i++) {
+			String[] hero = heroes[i+1].split(",",-1);
+			names[i] = Integer.toString(hero.length);
+		}
+		
 		
 		// TODO comment this
 		NamesFragment n_frag = new NamesFragment();
