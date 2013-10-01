@@ -1,63 +1,142 @@
 package com.example.dotadictionary;
 
-import java.io.BufferedReader;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.HttpContext;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.dotadictionary.NamesFragment.OnHeroSelectedListener;
 
 public class MainActivity extends FragmentActivity implements OnHeroSelectedListener {
-	String url;
 
+	String url_name;
+	String html;
+	
+	// Setter for html
+	private void setHtml(String o) {
+		html = o;
+	}
+	  
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		url = "https://docs.google.com/spreadsheet/pub?key=0ApYAGkG5V1-NdEdXLTJMdjR2MEdKRUJ1MWs0alRkRVE&single=true&gid=0&output=html";
+		// Initialize url and html
+		url_name = "https://docs.google.com/spreadsheet/pub?key=0ApYAGkG5V1-NdEdXLTJMdjR2MEdKRUJ1MWs0alRkRVE&single=true&gid=0&output=csv";
+//		url_name = "http://www.wikipedia.org/"; // TODO place url string in R
+		html = ""; // TODO maybe create empty string in R
 		
 		// Check if previous state is being restored
 		if (savedInstanceState != null) {
             return;
         }
 		
+		// Grab html code
+		URL url;
+		final HttpURLConnection urlConnection;
+		// TODO clean up this code
 		try {
-			getHtml();
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
+			url = new URL(url_name);
+			urlConnection = (HttpURLConnection) url.openConnection();
+			// Start new thread to download html
+			try {
+				Thread trd = new Thread(new Runnable() {
+				  @Override
+				  public void run(){
+						try {
+							urlConnection.getInputStream();
+						    BufferedInputStream in = new BufferedInputStream(urlConnection.getInputStream());
+						    setHtml(readStream(in));
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+						    setHtml("IO error thread");
+						}
+				  }
+				});
+				trd.start();
+				// Wait for thread to finish
+				// TODO Output something to user?
+			    try {
+			        trd.join();
+			    } catch (InterruptedException e) {
+					Toast.makeText(MainActivity.this, "trd_join", Toast.LENGTH_LONG).show();
+			    	e.printStackTrace();
+			    }
+			} catch (Exception e) {
+				Toast.makeText(this, "IOstream", Toast.LENGTH_LONG).show();
+				e.printStackTrace();
+			} finally {
+				urlConnection.disconnect();
+			}
+		} catch (MalformedURLException e) {
+			Toast.makeText(this, "MalformedURL", Toast.LENGTH_LONG).show();
 			e.printStackTrace();
 		} catch (IOException e) {
+			Toast.makeText(this, "IO", Toast.LENGTH_LONG).show();
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+		// TODO output errors with try catches
+		Toast.makeText(MainActivity.this, html, Toast.LENGTH_LONG).show();
+		Log.d("MainActivity",html); // TODO remove
 		
+		// TODO comment this
 		NamesFragment n_frag = new NamesFragment();
 		n_frag.setArguments(getIntent().getExtras());
 		
         getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, n_frag).commit();
 	}
 
+	// Reads input stream to string
+	private String readStream(InputStream is) {
+	    try {
+			ByteArrayOutputStream bo = new ByteArrayOutputStream();
+			int i = is.read();
+			while (i != -1) {
+				bo.write(i);
+				i = is.read();
+			}
+			return bo.toString();
+		} catch (IOException e) {
+			// TODO output some error
+			return "IO_readStream";
+		}
+
+	}
+
+	// Create options menu
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle item selection
+	    switch (item.getItemId()) {
+	        case R.id.menu_quit:
+	        	finish();
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
+	}
+	
+	// Handles selected item in List //TODO better comment
 	@Override
 	public void onHeroSelected(int position) {
 		// The user selected the headline of an article from the HeadlinesFragment
@@ -75,28 +154,5 @@ public class MainActivity extends FragmentActivity implements OnHeroSelectedList
 
         // Commit the transaction
         transaction.commit();	
-	}
-	
-	public void getHtml() throws ClientProtocolException, IOException
-	{
-	    HttpClient httpClient = new DefaultHttpClient();
-	    HttpContext localContext = new BasicHttpContext();
-	    HttpGet httpGet = new HttpGet(url);
-	    HttpResponse response = httpClient.execute(httpGet, localContext);
-	    String result = "";
-
-	    BufferedReader reader = new BufferedReader(
-	        new InputStreamReader(
-	          response.getEntity().getContent()
-	        )
-	      );
-
-	    String line = null;
-	    while ((line = reader.readLine()) != null){
-	      result += line + "\n";
-	      Toast.makeText(this, line.toString(), Toast.LENGTH_LONG).show();
-
-	    }
-
 	}
 }
