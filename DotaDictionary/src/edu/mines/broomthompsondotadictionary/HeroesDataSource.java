@@ -56,7 +56,6 @@ public class HeroesDataSource {
 	
 	public List<Hero> getAllHeroes() {
 		List<Hero> heroes = new ArrayList<Hero>();
-		Log.d("db","69");
 		Cursor cursor = database.query(SQLiteHelper.TABLE_HEROES, data, null, null, null, null, null);
 		
 		cursor.moveToFirst();
@@ -77,6 +76,48 @@ public class HeroesDataSource {
 		Hero hero = cursorToHero(cursor);
 		cursor.close();
 		return hero;
+	}
+	
+	public List<Hero> getHeroByQuery(String[] attrs) {
+		
+		List<Hero> heroes = new ArrayList<Hero>();
+		String query = "";
+		for(int i = 0; i < attrs.length; i++) {
+			if(attrs[i] != "") {
+				switch(i) {
+					case 0:
+						query += SQLiteHelper.COLUMN_NAME + " = '" + attrs[i] + "' and ";
+						break;
+					case 1:
+						query += SQLiteHelper.COLUMN_FOCUS + " = '" + attrs[i] + "' and ";
+						break;
+					case 2:
+						query += SQLiteHelper.COLUMN_ATTACK + " = '" + attrs[i] + "' and ";
+						break;
+					case 3:
+						query += SQLiteHelper.COLUMN_USE + " = '" + attrs[i] + "' and ";
+						break;
+					case 4:
+						query += SQLiteHelper.COLUMN_ROLE + " = '" + attrs[i] + "' and ";
+						break;
+				}
+			}
+		}
+		if(query != "") {
+			query = query.substring(0, query.length() - 5);
+		}
+		Log.d("q", query);
+		Cursor cursor = database.query(SQLiteHelper.TABLE_HEROES, data, query, null, null, null, null);
+		
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			Hero hero = cursorToHero(cursor);
+			heroes.add(hero);
+			cursor.moveToNext();
+		}
+		cursor.close();
+		
+		return heroes;
 	}
 	
 	private Hero cursorToHero(Cursor cursor) {

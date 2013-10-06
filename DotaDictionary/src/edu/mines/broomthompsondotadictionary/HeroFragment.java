@@ -56,6 +56,7 @@ public class HeroFragment extends Fragment {
     	TextView name_view = (TextView) getActivity().findViewById(R.id.name);
         Hero hero = MainActivity.source.getHeroByName(name);
         name_view.setText(hero.getName());
+        
         TextView focus_view = (TextView) getActivity().findViewById(R.id.focus);
         focus_view.setText(hero.getFocus());
         TextView attack_view = (TextView) getActivity().findViewById(R.id.attack);

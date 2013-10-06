@@ -17,7 +17,7 @@ public class NamesFragment extends ListFragment {
 
     // The container Activity must implement this interface so the fragment can deliver messages
     public interface OnHeroSelectedListener {
-        /** Called by HeadlinesFragment when a list item is selected */
+        /** Called by MainActivity when it has been selected, lets the activity know which hero has been selected. */
         public void onHeroSelected(String name);
     }
 

@@ -31,6 +31,7 @@ import android.content.ContextWrapper;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Menu;
@@ -40,6 +41,7 @@ import android.widget.Toast;
 
 import com.example.dotadictionary.R;
 
+import edu.mines.broomthompsondotadictionary.FilterFragment.OnFilterSelectedListener;
 import edu.mines.broomthompsondotadictionary.NamesFragment.OnHeroSelectedListener;
 
 /**
@@ -49,7 +51,7 @@ import edu.mines.broomthompsondotadictionary.NamesFragment.OnHeroSelectedListene
  *
  */
 public class MainActivity extends FragmentActivity implements
-		OnHeroSelectedListener {
+		OnHeroSelectedListener, OnFilterSelectedListener {
 
 	String url_name;
 	String data;
@@ -82,9 +84,14 @@ public class MainActivity extends FragmentActivity implements
 		// TODO comment this
 		NamesFragment n_frag = new NamesFragment();
 		n_frag.setArguments(getIntent().getExtras());
+		
+		FilterFragment f_frag = new FilterFragment();
+		f_frag.setArguments(getIntent().getExtras());
 
-		getSupportFragmentManager().beginTransaction()
-				.add(R.id.fragment_container, n_frag).commit();
+		FragmentManager frag_man = getSupportFragmentManager();
+		FragmentTransaction frag_trans = frag_man.beginTransaction();
+		frag_trans.add(R.id.fragment_container_bottom, n_frag);
+		frag_trans.add(R.id.fragment_container_top, f_frag).commit();
 	}
 
 	/**
@@ -249,7 +256,7 @@ public class MainActivity extends FragmentActivity implements
 		// fragment,
 		// and add the transaction to the back stack so the user can navigate
 		// back
-		transaction.replace(R.id.fragment_container, newFragment);
+		transaction.replace(R.id.fragment_container_bottom, newFragment);
 		transaction.addToBackStack(null);
 
 		// Commit the transaction
@@ -280,5 +287,14 @@ public class MainActivity extends FragmentActivity implements
 			String dbName) {
 		File dbFile = context.getDatabasePath(dbName);
 		return dbFile.exists();
+	}
+
+	@Override
+	public void onFilterSelected(String[] attrs) {
+		// TODO Auto-generated method stub
+		List<Hero> list = source.getHeroByQuery(attrs);
+		for(Hero h : list) {
+			Log.d("hero", h.getName());
+		}
 	}
 }

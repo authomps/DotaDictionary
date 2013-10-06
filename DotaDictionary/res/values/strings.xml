@@ -6,5 +6,20 @@
     <string name="hello_world">Hello world!</string>
     <string name="menu_quit">Quit</string>
     <string name="menu_refresh">Refresh</string>
+    <string name="focus">Focus:</string>
+    <string name="focus_int">Intelligence</string>
+    <string name="focus_str">Strength</string>
+    <string name="focus_agi">Agility</string>
+    <string name="attack">Attack:</string>
+    <string name="attack_melee">Melee</string>
+    <string name="attack_rng">Ranged</string>
+    <string name="ease">Ease of Use:</string>
+    <string name="role">Role:</string>
+    <string name="easy">Easy</string>
+    <string name="medium">Medium:</string>
+    <string name="hard">Hard:</string>
+    <string name="support">Support</string>
+    <string name="carry">Carry</string>
+    <string name="ganker">Ganker</string>
 
 </resources>
