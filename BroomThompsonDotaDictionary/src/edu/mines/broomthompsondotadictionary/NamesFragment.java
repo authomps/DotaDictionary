@@ -1,31 +1,35 @@
-package com.example.dotadictionary;
+package edu.mines.broomthompsondotadictionary;
 
 import android.app.Activity;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
+/**
+ * Class: NamesFragment
+ * Description: List of the hero names, when selected, goes to the HeroFragment
+ *
+ */
 public class NamesFragment extends ListFragment {
     OnHeroSelectedListener mCallback;
-    
 
     // The container Activity must implement this interface so the fragment can deliver messages
     public interface OnHeroSelectedListener {
-        /** Called by HeadlinesFragment when a list item is selected */
-        public void onHeroSelected(int position);
+        /** Called by MainActivity when it has been selected, lets the activity know which hero has been selected. */
+        public void onHeroSelected(String name);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-        int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1 : android.R.layout.simple_list_item_1;
-        
-        // Create an array adapter for the list view, using the Ipsum headlines array
-        setListAdapter(new ArrayAdapter<String>(getActivity(), layout, MainActivity.names));
+       
+        setListAdapter(MainActivity.adapter);
+    }
+    
+    public void refreshList() {
+    	setListAdapter(MainActivity.adapter);
     }
 
     @Override
@@ -51,9 +55,7 @@ public class NamesFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         // Notify the parent activity of selected item
-        mCallback.onHeroSelected(position);
-        
-        // Set the item as checked to be highlighted when in two-pane layout
-        getListView().setItemChecked(position, true);
+    	TextView view = (TextView) v;
+        mCallback.onHeroSelected(view.getText().toString());
     }
 }
