@@ -27,64 +27,76 @@ import android.widget.TextView;
 import com.example.dotadictionary.R;
 
 /**
- * Class: HeroFragment Description: The fragment containing detailed information
+ * Class: HeroFragment 
+ * 
+ * Description: The fragment containing detailed information
  * about each hero: Will eventually contain a picture and other miscellaneous
  * information.
  * 
+ * @author Alex Broom, Austin Thompson
+ * 
  */
 public class HeroFragment extends Fragment {
+	// Indicator of the name of the value passed in a savedInstance
 	final static String ARG_ID = "id";
+	// The name of the hero being displayed
 	String mCurrentName = "";
 	
+	/** 
+	 * onCreate: Creates the fragment
+	 * 
+	 *  @param savedInstanceState: the Bundle that can be used to recreate the fragment
+	 *  instead of recreate.
+	 */ 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 	}
 	
+	/** 
+	 * onCreateOptionsMenu: creation of options menu, used because refresh needs to be
+	 * removed when the hero fragment is brought up. 
+	 */ 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		// Get rid of all other items in the menu
 		menu.clear();
 		inflater.inflate(R.menu.names_menu, menu);
 	}
 
+	/** 
+	 * onCreateView: Creates the view of the fragment 
+	 */ 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-
-		// If activity recreated (such as from screen rotate), restore
-		// the previous article selection set by onSaveInstanceState().
-		// This is primarily necessary when in the two-pane layout.
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (savedInstanceState != null) {
 			mCurrentName = savedInstanceState.getString(ARG_ID);
 		}
-
-		// Inflate the layout for this fragment
+		
 		return inflater.inflate(R.layout.hero_view, container, false);
 	}
 
+	/** 
+	 * onStart: Handles start up of the app 
+	 */ 
 	@Override
 	public void onStart() {
 		super.onStart();
-
-		// During startup, check if there are arguments passed to the fragment.
-		// onStart is a good place to do this because the layout has already
-		// been
-		// applied to the fragment at this point so we can safely call the
-		// method
-		// below that sets the article text.
 		Bundle args = getArguments();
+		
+		// If there are args, use them, otherwise don't, 
 		if (args != null) {
-			// Set article based on argument passed in
-			updateArticleView(args.getString(ARG_ID));
+			updateHeroView(args.getString(ARG_ID));
 		} else if (mCurrentName != null) {
-			// Set article based on saved instance state defined during
-			// onCreateView
-			updateArticleView(mCurrentName);
+			updateHeroView(mCurrentName);
 		}
 	}
 
-	public void updateArticleView(String name) {
+	/** 
+	 * updateHeroView:  
+	 */ 
+	public void updateHeroView(String name) {
 
 		final Hero hero = MainActivity.source.getHeroByName(name);
 		Bitmap img;
@@ -101,30 +113,25 @@ public class HeroFragment extends Fragment {
 
 		try {
 			img = result.get();
-			ImageView portrait = (ImageView) getActivity().findViewById(
-					R.id.portrait);
-//			portrait.setScaleType(ScaleType.FIT_XY);
+			ImageView portrait = (ImageView) getActivity().findViewById(R.id.portrait);
 			portrait.setImageBitmap(img);
-			// Gets the width you want it to be
-//			int intendedWidth = portrait.getWidth();
+			
+			// Get the width of the screen
 			WindowManager wm = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
 			Display display = wm.getDefaultDisplay();
 			Point size = new Point();
 			display.getSize(size);
 			int intendedWidth = size.x;
-			// Gets the downloaded image dimensions
+			
+			// Get the downloaded image dimensions
 			int originalWidth = img.getWidth();
 			int originalHeight = img.getHeight();
 
-			// Calculates the new dimensions
+			// Calculate the new dimensions
 			float scale = (float) intendedWidth / originalWidth;
 			int newHeight = (int) Math.round(originalHeight * scale);
 			
-			// Resizes portrait. Change "FrameLayout" to whatever layout
-			// portrait is located in.
-//			portrait.setLayoutParams(new LinearLayout.LayoutParams(
-//					LinearLayout.LayoutParams.WRAP_CONTENT,
-//					LinearLayout.LayoutParams.WRAP_CONTENT));
+			// Resize the portrait
 			portrait.getLayoutParams().width = intendedWidth;
 			portrait.getLayoutParams().height = newHeight;			
 		} catch (Exception e) {
@@ -132,6 +139,7 @@ public class HeroFragment extends Fragment {
 			Log.d("portrait", "error getting portrait");
 		}
 
+		
 		TextView name_view = (TextView) getActivity().findViewById(R.id.name);
 		if(hero.getName().length() > 13) {
 			name_view.setTextSize(24);

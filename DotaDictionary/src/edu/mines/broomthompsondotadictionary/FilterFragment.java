@@ -36,6 +36,7 @@ public class FilterFragment extends Fragment {
 	
 	// Array that will contain strings to look for in each column of 
 	// the database, one index for each column.
+	// FORMAT: [FOCUS, ATTACK, EASE OF USE, ROLE ]
 	String[] query;
 
 	/** 
@@ -69,20 +70,25 @@ public class FilterFragment extends Fragment {
 	 * OnCreateView: Initializes member variables, loads defined xml,
 	 * sets listeners for the check boxes.
 	 * 
-	 * @param inflater: A Bundle that allows the fragment to be restored 
+	 * @param inflater: The object to inflate the view in the container.
+	 * @param container: The container the view is inflated into
+	 * @param savedInstanceState: A Bundle that allows the fragment to be restored 
 	 * rather than rebuilt. 
 	 */ 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
+		// Initialize containers of check boxes
 		focus_boxes = new ArrayList<CheckBox>();
 		attack_boxes = new ArrayList<CheckBox>();
 		ease_boxes = new ArrayList<CheckBox>();
 		role_boxes = new ArrayList<CheckBox>();
 
+		// inflate xml into container
 		View v = inflater.inflate(R.layout.filter_frag, container, false);
 
+		// Link check boxes to xml and add them to the appropriate ArrayList
 		CheckBox focus_str = (CheckBox) v.findViewById(R.id.focus_str);
 		focus_boxes.add(focus_str);
 		CheckBox focus_int = (CheckBox) v.findViewById(R.id.focus_int);
@@ -109,23 +115,31 @@ public class FilterFragment extends Fragment {
 		CheckBox role_ganker = (CheckBox) v.findViewById(R.id.role_ganker);
 		role_boxes.add(role_ganker);
 		
+		// Create search field, text must be accessed by the listeners on the 
+		// check boxes, so it is final.
 		final EditText search = (EditText) v.findViewById(R.id.search);
 
+		// Iterate through the first row of boxes and add appropriate listeners
 		for (CheckBox box : focus_boxes) {
 			box.setOnClickListener(new CheckBox.OnClickListener() {
+			
 				public void onClick(View v) {
 					CheckBox selected_box = (CheckBox) v;
+					// Checks to see if any other box is checked in that row, if so, uncheck it
 					for (CheckBox cbox : focus_boxes) {
 						if (cbox.getId() != selected_box.getId()) {
 							cbox.setChecked(false);
 						}
 					}
+					// Check all other boxes and build query
 					checkBoxes();
+					// Use callback to access database with query
 					mCallback.onFilterSelected(query, search.getText().toString());
 				}
 			});
 		}
 		
+		// The above is repeated for the other 3 array lists of checkboxes
 		for (CheckBox box : attack_boxes) {
 			box.setOnClickListener(new CheckBox.OnClickListener() {
 				public void onClick(View v) {
@@ -173,10 +187,12 @@ public class FilterFragment extends Fragment {
 			});
 		}
 		
+		// Queries are also made whenever the user types a letter into the search field,
+		// these listeners allow for that.
 		search.addTextChangedListener(new TextWatcher() {          
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {                                   
-                   //here is your code
+            		// Use callback for query whenever a key is pressed
             		mCallback.onFilterSelected(query, search.getText().toString());
 
             }                       
@@ -195,14 +211,26 @@ public class FilterFragment extends Fragment {
 		return v;
 	}
 	
+	/** 
+	 * checkBoxes: Helper function that iterates through all check boxes and builds a 
+	 * query according to which are checked.
+	 * 
+	 */ 
 	public void checkBoxes() {
+		// Start with an empty query
 		query = new String[] { "", "", "", "", "" };
+		
+		// Iterate through the check boxes on the first row
 		for (CheckBox box : focus_boxes) {
+			// If a box is checked, use the value of its string as
+			// the query to the database.
 			if(box.isChecked()) {
 				Button text_getter = (Button) box;
+				// The first index of the query array is for the focus category
 				query[1] = text_getter.getText().toString();
 			}
 		}
+		// The above is repeated for each category (attack, ease and role)
 		for (CheckBox box : attack_boxes) {
 			if(box.isChecked()) {
 				Button text_getter = (Button) box;
@@ -223,11 +251,15 @@ public class FilterFragment extends Fragment {
 		}
 	}
 	
+	/** 
+	 * onAttach: When this fragment is attached to the Main Activity, this function
+	 * ensures that the appropriate methods have been implemented.
+	 * 
+	 * @param activity: The activity that is using this fragment 
+	 */ 
 	public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        // This makes sure that the container activity has implemented
-        // the callback interface. If not, it throws an exception.
         try {
             mCallback = (OnFilterSelectedListener) activity;
         } catch (ClassCastException e) {
@@ -235,10 +267,4 @@ public class FilterFragment extends Fragment {
                     + " must implement OnFilterSelectedListener");
         }
     }
-
-	@Override
-	public void onStart() {
-		super.onStart();
-
-	}
 }
