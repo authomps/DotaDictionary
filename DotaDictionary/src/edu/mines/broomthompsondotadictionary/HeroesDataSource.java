@@ -8,7 +8,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 /**
  * Class: HeroesDataSource
@@ -18,7 +17,8 @@ import android.util.Log;
 public class HeroesDataSource {
 	private SQLiteDatabase database;
 	private SQLiteHelper dbHelper;
-	private String[] data = { SQLiteHelper.COLUMN_ID, SQLiteHelper.COLUMN_NAME, SQLiteHelper.COLUMN_FOCUS, SQLiteHelper.COLUMN_ATTACK, SQLiteHelper.COLUMN_USE, SQLiteHelper.COLUMN_ROLE };
+	private String[] data = { SQLiteHelper.COLUMN_ID, SQLiteHelper.COLUMN_NAME, 
+			SQLiteHelper.COLUMN_FOCUS, SQLiteHelper.COLUMN_ATTACK, SQLiteHelper.COLUMN_USE, SQLiteHelper.COLUMN_ROLE, SQLiteHelper.COLUMN_PIC };
 
 	public HeroesDataSource(Context ctx) {
 		dbHelper = new SQLiteHelper(ctx);
@@ -44,6 +44,7 @@ public class HeroesDataSource {
 		vals.put(SQLiteHelper.COLUMN_ATTACK, attrs[2]);
 		vals.put(SQLiteHelper.COLUMN_USE, attrs[3]);
 		vals.put(SQLiteHelper.COLUMN_ROLE, attrs[4]);
+		vals.put(SQLiteHelper.COLUMN_PIC, attrs[5]);
 		
 		long heroId = database.insert(SQLiteHelper.TABLE_HEROES, null, vals);
 		Cursor cursor = database.query(SQLiteHelper.TABLE_HEROES, data, SQLiteHelper.COLUMN_ID + 
@@ -70,7 +71,6 @@ public class HeroesDataSource {
 	}
 	
 	public Hero getHeroByName(String name) {
-		Log.d("dbget", "before query");
 		Cursor cursor = database.query(SQLiteHelper.TABLE_HEROES, data, SQLiteHelper.COLUMN_NAME + " = '" + name + "'", null, null, null, null);
 		cursor.moveToFirst();
 		Hero hero = cursorToHero(cursor);
@@ -106,7 +106,6 @@ public class HeroesDataSource {
 		if(query != "") {
 			query = query.substring(0, query.length() - 5);
 		}
-		Log.d("q", query);
 		Cursor cursor = database.query(SQLiteHelper.TABLE_HEROES, data, query, null, null, null, null);
 		
 		cursor.moveToFirst();
@@ -128,6 +127,7 @@ public class HeroesDataSource {
 		hero.setAttack(cursor.getString(3));
 		hero.setUse(cursor.getString(4));
 		hero.setRole(cursor.getString(5));
+		hero.setPicture(cursor.getString(6));
 		return hero;
 	}
 	

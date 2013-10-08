@@ -27,6 +27,10 @@ public class NamesFragment extends ListFragment {
        
         setListAdapter(MainActivity.adapter);
     }
+    
+    public void refreshList() {
+    	setListAdapter(MainActivity.adapter);
+    }
 
     @Override
     public void onStart() {

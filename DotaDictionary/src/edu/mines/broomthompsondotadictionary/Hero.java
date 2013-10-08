@@ -7,8 +7,16 @@ package edu.mines.broomthompsondotadictionary;
  */
 public class Hero {
 	private long id;
-	private String name, focus, attack, use, role;
+	private String name, focus, attack, use, role, picture;
 	
+	public String getPicture() {
+		return picture;
+	}
+
+	public void setPicture(String picture_url) {
+		this.picture = picture_url;
+	}
+
 	public long getId() {
 		return id;
 	}

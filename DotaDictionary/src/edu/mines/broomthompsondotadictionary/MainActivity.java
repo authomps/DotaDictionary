@@ -26,9 +26,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
+import java.util.Locale;
 
 import android.content.ContextWrapper;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -58,6 +58,8 @@ public class MainActivity extends FragmentActivity implements
 	static String[] names;
 	static HeroesDataSource source;
 	static ArrayAdapter<Hero> adapter;
+	NamesFragment n_frag;
+	FilterFragment f_frag;
 
 	// Setter for data
 	private void setData(String data) {
@@ -82,16 +84,16 @@ public class MainActivity extends FragmentActivity implements
 		adapter = refresh();
 
 		// TODO comment this
-		NamesFragment n_frag = new NamesFragment();
+		n_frag = new NamesFragment();
 		n_frag.setArguments(getIntent().getExtras());
 		
-		FilterFragment f_frag = new FilterFragment();
+		f_frag = new FilterFragment();
 		f_frag.setArguments(getIntent().getExtras());
 
 		FragmentManager frag_man = getSupportFragmentManager();
 		FragmentTransaction frag_trans = frag_man.beginTransaction();
-		frag_trans.add(R.id.fragment_container_bottom, n_frag);
-		frag_trans.add(R.id.fragment_container_top, f_frag).commit();
+		frag_trans.add(R.id.fragment_container_bottom, f_frag);
+		frag_trans.add(R.id.fragment_container_top, n_frag).commit();
 	}
 
 	/**
@@ -222,9 +224,11 @@ public class MainActivity extends FragmentActivity implements
 			finish();
 			return true;
 		case R.id.menu_refresh:
-			refresh();
-			finish();
-			startActivity(new Intent(this, MainActivity.class));
+			adapter = refresh();
+			n_frag = new NamesFragment();
+			FragmentManager frag_man = getSupportFragmentManager();
+			FragmentTransaction frag_trans = frag_man.beginTransaction();
+			frag_trans.replace(R.id.fragment_container_bottom, n_frag).commit();
 //			NamesFragment n_frag = new NamesFragment();
 //			n_frag.setArguments(getIntent().getExtras());
 //			getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, n_frag);
@@ -242,21 +246,19 @@ public class MainActivity extends FragmentActivity implements
 	 */
 	@Override
 	public void onHeroSelected(String name) {
-		// The user selected the headline of an article from the
-		// HeadlinesFragment
-		// Log.d("callback", Long.toString(id));
-		HeroFragment newFragment = new HeroFragment();
+		HeroFragment h_frag = new HeroFragment();
 		Bundle args = new Bundle();
 		args.putString(HeroFragment.ARG_ID, name);
-		newFragment.setArguments(args);
-		FragmentTransaction transaction = getSupportFragmentManager()
-				.beginTransaction();
+		h_frag.setArguments(args);
+		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+		transaction.hide(f_frag);
+		transaction.hide(n_frag);
 
 		// Replace whatever is in the fragment_container view with this
 		// fragment,
 		// and add the transaction to the back stack so the user can navigate
 		// back
-		transaction.replace(R.id.fragment_container_bottom, newFragment);
+		transaction.replace(R.id.fragment_container_overlay, h_frag);
 		transaction.addToBackStack(null);
 
 		// Commit the transaction
@@ -275,7 +277,6 @@ public class MainActivity extends FragmentActivity implements
 		if (doesDatabaseExist(this, source.getName())) {
 			source.delete(this);
 		}
-
 	}
 
 	/**
@@ -288,13 +289,26 @@ public class MainActivity extends FragmentActivity implements
 		File dbFile = context.getDatabasePath(dbName);
 		return dbFile.exists();
 	}
+	
+	@Override
+	public void onBackPressed() {
+		FragmentManager frag_man = getSupportFragmentManager();
+		frag_man.popBackStack();
+	}
 
 	@Override
-	public void onFilterSelected(String[] attrs) {
+	public void onFilterSelected(String[] attrs, String search) {
 		// TODO Auto-generated method stub
 		List<Hero> list = source.getHeroByQuery(attrs);
+		adapter.clear();
 		for(Hero h : list) {
-			Log.d("hero", h.getName());
+			if(search.length() <= h.getName().length()) {
+				if(h.getName().substring(0, search.length()).toLowerCase(Locale.getDefault()).contains(search.toLowerCase(Locale.getDefault()))) {
+					adapter.add(h);
+				}				
+			}
 		}
+		
+		n_frag.refreshList();
 	}
 }

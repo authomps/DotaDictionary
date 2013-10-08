@@ -16,10 +16,14 @@
     <string name="ease">Ease of Use:</string>
     <string name="role">Role:</string>
     <string name="easy">Easy</string>
-    <string name="medium">Medium:</string>
-    <string name="hard">Hard:</string>
+    <string name="medium">Medium</string>
+    <string name="hard">Hard</string>
     <string name="support">Support</string>
     <string name="carry">Carry</string>
     <string name="ganker">Ganker</string>
+    <string name="portrait_img">Hero Portrait</string>
+    <string name="focus_img">Focus</string>
+    <string name="attack_img">Attack Type</string>
+    <string name="search">Search</string>
 
 </resources>

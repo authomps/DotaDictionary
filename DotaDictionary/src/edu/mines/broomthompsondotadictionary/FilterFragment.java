@@ -5,49 +5,73 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 
 import com.example.dotadictionary.R;
 
 /**
- * Class: FilterFragment Description: List of the hero names, when selected,
- * goes to the HeroFragment
+ * Class: FilterFragment 
+ * Description: The top fragment of the main screen, displays the checkboxes for filtering the list 
+ * of heroes and the text edit for search by name.
  * 
+ * @author Alex Broom, Austin Thompson
  */
 public class FilterFragment extends Fragment {
 	OnFilterSelectedListener mCallback;
 
+	// Containers for each category of check boxes.
+	// Separated because only one can be checked in each row
 	ArrayList<CheckBox> focus_boxes;
 	ArrayList<CheckBox> attack_boxes;
 	ArrayList<CheckBox> ease_boxes;
 	ArrayList<CheckBox> role_boxes;
-
-	Button ranged, melee;
-	Button easy, medium, hard;
-	CheckBox box;
+	
+	// Array that will contain strings to look for in each column of 
+	// the database, one index for each column.
 	String[] query;
 
-	// The container Activity must implement this interface so the fragment can
-	// deliver messages
+	/** 
+	 * OnFilterSelectedListener: An interface which requires the activity using this 
+	 * fragment to implement the function necessary to pass information back into the
+	 * activity.  
+	 */ 
+
 	public interface OnFilterSelectedListener {
 		/**
 		 * Called by fragment to check which filters have been selected, builds
 		 * a SQL queyr as a result.
 		 */
-		public void onFilterSelected(String[] attrs);
+		public void onFilterSelected(String[] attrs, String search);
 	}
 
+	/** 
+	 * OnCreate: Creates the fragment.
+	 * 
+	 * @param savedInstanceState: A Bundle that allows the fragment to be restored 
+	 * rather than rebuilt. 
+	 */ 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		// Initialize the query to all null values
 		query = new String[] { "", "", "", "", "" };
 		super.onCreate(savedInstanceState);
 	}
 
+	/** 
+	 * OnCreateView: Initializes member variables, loads defined xml,
+	 * sets listeners for the check boxes.
+	 * 
+	 * @param inflater: A Bundle that allows the fragment to be restored 
+	 * rather than rebuilt. 
+	 */ 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -84,6 +108,8 @@ public class FilterFragment extends Fragment {
 		role_boxes.add(role_support);
 		CheckBox role_ganker = (CheckBox) v.findViewById(R.id.role_ganker);
 		role_boxes.add(role_ganker);
+		
+		final EditText search = (EditText) v.findViewById(R.id.search);
 
 		for (CheckBox box : focus_boxes) {
 			box.setOnClickListener(new CheckBox.OnClickListener() {
@@ -94,9 +120,8 @@ public class FilterFragment extends Fragment {
 							cbox.setChecked(false);
 						}
 					}
-					Button text_getter = (Button) v;
 					checkBoxes();
-					mCallback.onFilterSelected(query);
+					mCallback.onFilterSelected(query, search.getText().toString());
 				}
 			});
 		}
@@ -111,9 +136,8 @@ public class FilterFragment extends Fragment {
 						}
 						
 					}
-					Button text_getter = (Button) v;
 					checkBoxes();
-					mCallback.onFilterSelected(query);
+					mCallback.onFilterSelected(query, search.getText().toString());
 				}
 			});
 		}
@@ -127,10 +151,9 @@ public class FilterFragment extends Fragment {
 							cbox.setChecked(false);
 						}
 					}
-					Button text_getter = (Button) v;
 					checkBoxes();
 					Log.d("q", query[3]);
-					mCallback.onFilterSelected(query);
+					mCallback.onFilterSelected(query, search.getText().toString());
 				}
 			});
 		}
@@ -144,12 +167,30 @@ public class FilterFragment extends Fragment {
 							cbox.setChecked(false);
 						}
 					}
-					Button text_getter = (Button) v;
 					checkBoxes();
-					mCallback.onFilterSelected(query);
+					mCallback.onFilterSelected(query, search.getText().toString());
 				}
 			});
 		}
+		
+		search.addTextChangedListener(new TextWatcher() {          
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {                                   
+                   //here is your code
+            		mCallback.onFilterSelected(query, search.getText().toString());
+
+            }                       
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                    int after) {
+                // TODO Auto-generated method stub                          
+            }                       
+            @Override
+            public void afterTextChanged(Editable s) {
+                // TODO Auto-generated method stub                          
+
+            }
+        });
 
 		return v;
 	}

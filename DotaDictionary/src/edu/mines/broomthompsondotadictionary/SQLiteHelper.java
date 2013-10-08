@@ -17,6 +17,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 	public static final String COLUMN_ATTACK = "attack";
 	public static final String COLUMN_USE = "use";
 	public static final String COLUMN_ROLE = "role";
+	public static final String COLUMN_PIC = "picture";
 	
 	
 	private static final String DATABASE_NAME = "heroes.db";
@@ -29,7 +30,8 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 			+ COLUMN_FOCUS	+ " text not null, " 
 			+ COLUMN_ATTACK + " text not null, " 
 			+ COLUMN_USE + " text not null, " 
-			+ COLUMN_ROLE + " text not null);";
+			+ COLUMN_ROLE + " text not null, "
+			+ COLUMN_PIC + " text not null);";
 
 	public SQLiteHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
