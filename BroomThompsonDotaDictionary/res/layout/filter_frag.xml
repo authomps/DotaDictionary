@@ -13,7 +13,8 @@
             android:layout_weight="0.8"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/focus" />
+            android:text="@string/focus"
+            android:textColor="@color/red" />
 
         <CheckBox
             android:id="@+id/focus_str"
@@ -48,7 +49,8 @@
             android:layout_weight="0.8"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/attack" />
+            android:text="@string/attack"
+            android:textColor="@color/red" />
 
         <CheckBox
             android:id="@+id/attack_melee"
@@ -74,7 +76,8 @@
             android:layout_weight="0.8"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/ease" />
+            android:text="@string/ease"
+            android:textColor="@color/red" />
 
         <CheckBox
             android:id="@+id/ease_easy"
@@ -107,7 +110,8 @@
             android:layout_weight="0.8"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/role" />
+            android:text="@string/role"
+            android:textColor="@color/red" />
 
         <CheckBox
             android:id="@+id/role_support"
@@ -131,13 +135,29 @@
             android:text="@string/ganker" />
     </LinearLayout>
 
-    <EditText
-        android:id="@+id/search"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/search"
-        android:singleLine="true"
-        android:textSize="28sp"
-        android:imeOptions="actionDone" />
+    <FrameLayout 
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content" >
+        
+	    <EditText
+	        android:id="@+id/search"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:hint="@string/search"
+	        android:singleLine="true"
+	        android:textSize="28sp"
+	        android:imeOptions="actionDone"
+	        android:paddingRight="40dp"
+	        android:textCursorDrawable="@color/red" />
+	    
+	    <Button
+    	    android:id="@+id/clear_search"      
+	        android:layout_width="28sp"
+	        android:layout_height="28sp"
+	        android:layout_marginRight="10dp"
+	        android:layout_marginTop="1dp"
+	        android:layout_gravity="right|center_vertical"
+	        android:background="@drawable/ic_clear" />
+    </FrameLayout>
 
 </LinearLayout>

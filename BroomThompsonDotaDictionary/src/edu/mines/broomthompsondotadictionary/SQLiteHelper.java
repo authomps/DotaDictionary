@@ -5,10 +5,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 /**
+ * @author Alexander Broom
+ * @author Austin Thompson
+ * 
  * Class: SQLiteOpenHelper
  * Description: The helper class for the Java database in the DAO 
  *
- * @author Alex Broom, Austin Thompson
  */
 public class SQLiteHelper extends SQLiteOpenHelper {
 	

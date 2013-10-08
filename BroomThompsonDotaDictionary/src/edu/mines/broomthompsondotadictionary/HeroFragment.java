@@ -24,16 +24,15 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import edu.mines.broomthompsondotadictionary.R;
-
 /**
+ * @author Alexander Broom
+ * @author Austin Thompson
+ * 
  * Class: HeroFragment 
  * 
  * Description: The fragment containing detailed information
  * about each hero: Will eventually contain a picture and other miscellaneous
  * information.
- * 
- * @author Alex Broom, Austin Thompson
  * 
  */
 public class HeroFragment extends Fragment {
@@ -52,17 +51,6 @@ public class HeroFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
-	}
-	
-	/** 
-	 * onCreateOptionsMenu: creation of options menu, used because refresh needs to be
-	 * removed when the hero fragment is brought up. 
-	 */ 
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		// Get rid of all other items in the menu
-		menu.clear();
-		inflater.inflate(R.menu.names_menu, menu);
 	}
 
 	/** 
@@ -85,7 +73,7 @@ public class HeroFragment extends Fragment {
 		super.onStart();
 		Bundle args = getArguments();
 		
-		// If there are args, use them, otherwise don't, 
+		// Create fragment if there are args, otherwise use previous instance of fragment
 		if (args != null) {
 			updateHeroView(args.getString(ARG_ID));
 		} else if (mCurrentName != null) {
@@ -94,13 +82,15 @@ public class HeroFragment extends Fragment {
 	}
 
 	/** 
-	 * updateHeroView:  
+	 * updateHeroView:  Sets data in fragment for each hero
 	 */ 
 	public void updateHeroView(String name) {
-
+		// Get hero
 		final Hero hero = MainActivity.source.getHeroByName(name);
+		// Variable for image to be loaded
 		Bitmap img;
-
+	
+		// Executor Service to create new thread to download image from url
 		ExecutorService es = Executors.newSingleThreadExecutor();
 		Future<Bitmap> result = es.submit(new Callable<Bitmap>() {
 			public Bitmap call() throws Exception {
@@ -111,6 +101,7 @@ public class HeroFragment extends Fragment {
 			}
 		});
 
+		// Try to download image
 		try {
 			img = result.get();
 			ImageView portrait = (ImageView) getActivity().findViewById(R.id.portrait);
@@ -135,18 +126,20 @@ public class HeroFragment extends Fragment {
 			portrait.getLayoutParams().width = intendedWidth;
 			portrait.getLayoutParams().height = newHeight;			
 		} catch (Exception e) {
+			// If exception, make log statement and print stack
+			Log.e(getString(R.string.app_name), "Failed to load portrait");
 			e.printStackTrace();
-			Log.d("portrait", "error getting portrait");
+			// Continue to create rest of fragment, whether image loads or not
 		}
 
-		
+		// Set the name text view
 		TextView name_view = (TextView) getActivity().findViewById(R.id.name);
 		if(hero.getName().length() > 13) {
 			name_view.setTextSize(24);
 		}
 		name_view.setText(hero.getName());
 		
-		
+		// Determine which icon to display depending on hero's focus
 		ImageView focus_view = (ImageView) getActivity().findViewById(R.id.focus);
 		String focus = hero.getFocus();
 		if(focus.equals("Intelligence")) {
@@ -157,20 +150,35 @@ public class HeroFragment extends Fragment {
 			focus_view.setImageResource(R.drawable.icon_strength);
 		}
 		
+		// Determine which icon to display depending on hero's attack type
 		ImageView attack_view = (ImageView) getActivity().findViewById(R.id.attack);
-		Log.d("test", hero.getAttack());
 		if(hero.getAttack().equals("Melee")) {
 			attack_view.setImageResource(R.drawable.icon_melee);
-		}
-		else {
+		} else {
 			attack_view.setImageResource(R.drawable.icon_ranged);
 		}
 		
+		// Display hero's ease of use and role
 		TextView use_view = (TextView) getActivity().findViewById(R.id.role_use);
 		use_view.setText(hero.getUse() + " " + hero.getRole());
 		mCurrentName = name;
 	}
+
 	
+	/** 
+	 * onCreateOptionsMenu: creation of options menu, used because refresh needs to be
+	 * removed when the hero fragment is brought up. 
+	 */ 
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		// Get rid of all other items in the menu
+		menu.clear();
+		inflater.inflate(R.menu.names_menu, menu);
+	}
+	
+	/** 
+	 * onOptionsItemSelected: Handles what to do when menu item selected
+	 */ 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
@@ -183,12 +191,12 @@ public class HeroFragment extends Fragment {
 		}
 	}
 
+	/** 
+	 * onSaveInstanceState: saves the current article selection in case we need to recreate the fragment
+	 */ 	
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-
-		// Save the current article selection in case we need to recreate the
-		// fragment
 		outState.putString(ARG_ID, mCurrentName);
 	}
 }

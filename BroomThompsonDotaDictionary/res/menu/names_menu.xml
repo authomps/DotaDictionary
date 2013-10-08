@@ -3,6 +3,6 @@
         android:id="@+id/menu_quit"
         android:orderInCategory="101"
         android:showAsAction="always"
-        android:title="@string/menu_quit">
+        android:title="@string/menu_quit" android:icon="@drawable/ic_action_quit">
     </item>
 </menu>

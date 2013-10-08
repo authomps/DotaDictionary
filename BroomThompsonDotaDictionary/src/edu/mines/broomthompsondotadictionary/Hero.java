@@ -3,12 +3,17 @@ package edu.mines.broomthompsondotadictionary;
 /**
  * Class: Hero
  * Description: A container for all the information our program stores about each hero.
- *
+ * 
+ * @author Alex Broom, Austin Thompson
+ * 
  */
 public class Hero {
+	// id of each hero, used for database management
 	private long id;
+	// each heroe's attributes as well as a picture string, which should contain a url to download the image
 	private String name, focus, attack, use, role, picture;
 	
+	// Getters and Setters
 	public String getPicture() {
 		return picture;
 	}
@@ -65,6 +70,7 @@ public class Hero {
 		this.name = name;
 	}
 	
+	// overridden toString function, useful in database management
 	@Override
 	public String toString() {
 		return name;

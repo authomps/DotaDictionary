@@ -10,17 +10,20 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 /**
+ * @author Alexander Broom
+ * @author Austin Thompson
+ * 
  * Class: HeroesDataSource
  * Description: A DAO for the database, contains the Android helper for 
  * using the Java Database, as well as the Java Database itself. Also contains
  * numerous functions for unique types of queries that are needed by the app.
  *
- * @author Alex Broom, Austin Thompson
  */
 public class HeroesDataSource {
 	
 	private SQLiteDatabase database; // The database itself
 	private SQLiteHelper dbHelper; // An object that allows the database to be interfaced with
+	
 	// Stores the types of columns held in the database, used whenever the database is queried 
 	// to indicate that we want all data associated with an entry.
 	private String[] data = { SQLiteHelper.COLUMN_ID, SQLiteHelper.COLUMN_NAME, 
@@ -63,10 +66,8 @@ public class HeroesDataSource {
 	 * 
 	 * @param attrs: Specifically ordered to define a Hero object and database entry
 	 * FORMAT: [NAME, FOCUS, ATTACK, USE, ROLE, PICTURE]
-	 * @return Hero: The resulting hero objected created after the entry has been 
-	 * added to the database.
 	 */ 
-	public Hero addHero(String[] attrs) {
+	public void addHero(String[] attrs) {
 		
 		// Container for each of the values to be added to the new database entry.
 		ContentValues vals = new ContentValues();
@@ -85,10 +86,7 @@ public class HeroesDataSource {
 		// Get a cursor pointing to the above id containing all data
 		Cursor cursor = database.query(SQLiteHelper.TABLE_HEROES, data, SQLiteHelper.COLUMN_ID + 
 				" = " + heroId, null, null, null, null);
-		cursor.moveToFirst();	// Go to the beginning of the list of values from the above query
-		Hero hero = cursorToHero(cursor);	// Use helper function to convert data to a Hero object
 		cursor.close();
-		return hero;	//Return the hero object that has just been created.
 	}
 	
 	/** 

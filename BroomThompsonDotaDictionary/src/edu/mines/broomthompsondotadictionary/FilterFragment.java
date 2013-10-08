@@ -9,35 +9,46 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
-import edu.mines.broomthompsondotadictionary.R;
-
 /**
+ * @author Alexander Broom
+ * @author Austin Thompson
+ * 
  * Class: FilterFragment 
  * Description: The top fragment of the main screen, displays the checkboxes for filtering the list 
  * of heroes and the text edit for search by name.
  * 
- * @author Alex Broom, Austin Thompson
  */
 public class FilterFragment extends Fragment {
 	OnFilterSelectedListener mCallback;
 
 	// Containers for each category of check boxes.
 	// Separated because only one can be checked in each row
-	ArrayList<CheckBox> focus_boxes;
-	ArrayList<CheckBox> attack_boxes;
-	ArrayList<CheckBox> ease_boxes;
-	ArrayList<CheckBox> role_boxes;
+	ArrayList<CheckBox> focusBoxes;
+	ArrayList<CheckBox> attackBoxes;
+	ArrayList<CheckBox> easeBoxes;
+	ArrayList<CheckBox> roleBoxes;
 	
 	// Array that will contain strings to look for in each column of 
 	// the database, one index for each column.
 	// FORMAT: [FOCUS, ATTACK, EASE OF USE, ROLE ]
 	String[] query;
+	
+	// Search EditText
+	EditText search;
+	
+	// saved previous filter options
+	String[] prev_query;
+	String prev_search;
+	
 
 	/** 
 	 * OnFilterSelectedListener: An interface which requires the activity using this 
@@ -64,6 +75,10 @@ public class FilterFragment extends Fragment {
 		// Initialize the query to all null values
 		query = new String[] { "", "", "", "", "" };
 		super.onCreate(savedInstanceState);
+		
+		// initialize previous filter options
+		prev_query = new String[] { "", "", "", "", "" };
+		prev_search = "";
 	}
 
 	/** 
@@ -76,139 +91,140 @@ public class FilterFragment extends Fragment {
 	 * rather than rebuilt. 
 	 */ 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 		// Initialize containers of check boxes
-		focus_boxes = new ArrayList<CheckBox>();
-		attack_boxes = new ArrayList<CheckBox>();
-		ease_boxes = new ArrayList<CheckBox>();
-		role_boxes = new ArrayList<CheckBox>();
+		focusBoxes = new ArrayList<CheckBox>();
+		attackBoxes = new ArrayList<CheckBox>();
+		easeBoxes = new ArrayList<CheckBox>();
+		roleBoxes = new ArrayList<CheckBox>();
 
 		// inflate xml into container
 		View v = inflater.inflate(R.layout.filter_frag, container, false);
 
 		// Link check boxes to xml and add them to the appropriate ArrayList
 		CheckBox focus_str = (CheckBox) v.findViewById(R.id.focus_str);
-		focus_boxes.add(focus_str);
+		focusBoxes.add(focus_str);
 		CheckBox focus_int = (CheckBox) v.findViewById(R.id.focus_int);
-		focus_boxes.add(focus_int);
+		focusBoxes.add(focus_int);
 		CheckBox focus_agi = (CheckBox) v.findViewById(R.id.focus_agi);
-		focus_boxes.add(focus_agi);
+		focusBoxes.add(focus_agi);
 
 		CheckBox attack_melee = (CheckBox) v.findViewById(R.id.attack_melee);
-		attack_boxes.add(attack_melee);
+		attackBoxes.add(attack_melee);
 		CheckBox attack_rng = (CheckBox) v.findViewById(R.id.attack_ranged);
-		attack_boxes.add(attack_rng);
+		attackBoxes.add(attack_rng);
 
 		CheckBox ease_easy = (CheckBox) v.findViewById(R.id.ease_easy);
-		ease_boxes.add(ease_easy);
+		easeBoxes.add(ease_easy);
 		CheckBox ease_med = (CheckBox) v.findViewById(R.id.ease_med);
-		ease_boxes.add(ease_med);
+		easeBoxes.add(ease_med);
 		CheckBox ease_hard = (CheckBox) v.findViewById(R.id.ease_hard);
-		ease_boxes.add(ease_hard);
+		easeBoxes.add(ease_hard);
 
 		CheckBox role_carry = (CheckBox) v.findViewById(R.id.role_carry);
-		role_boxes.add(role_carry);
+		roleBoxes.add(role_carry);
 		CheckBox role_support = (CheckBox) v.findViewById(R.id.role_support);
-		role_boxes.add(role_support);
+		roleBoxes.add(role_support);
 		CheckBox role_ganker = (CheckBox) v.findViewById(R.id.role_ganker);
-		role_boxes.add(role_ganker);
+		roleBoxes.add(role_ganker);
 		
 		// Create search field, text must be accessed by the listeners on the 
 		// check boxes, so it is final.
-		final EditText search = (EditText) v.findViewById(R.id.search);
+		search = (EditText) v.findViewById(R.id.search);
 
-		// Iterate through the first row of boxes and add appropriate listeners
-		for (CheckBox box : focus_boxes) {
-			box.setOnClickListener(new CheckBox.OnClickListener() {
-			
-				public void onClick(View v) {
-					CheckBox selected_box = (CheckBox) v;
-					// Checks to see if any other box is checked in that row, if so, uncheck it
-					for (CheckBox cbox : focus_boxes) {
-						if (cbox.getId() != selected_box.getId()) {
-							cbox.setChecked(false);
-						}
-					}
-					// Check all other boxes and build query
-					checkBoxes();
-					// Use callback to access database with query
-					mCallback.onFilterSelected(query, search.getText().toString());
-				}
-			});
+		// Iterate through focus CheckBoxes adding appropriate listeners
+		for (CheckBox box : focusBoxes) {
+			box.setOnClickListener(new CheckBoxClickListener(focusBoxes));
+		}
+
+		// Iterate through attack CheckBoxes adding appropriate listeners
+		for (CheckBox box : attackBoxes) {
+			box.setOnClickListener(new CheckBoxClickListener(attackBoxes));
+		}
+
+		// Iterate through ease of use CheckBoxes adding appropriate listeners
+		for (CheckBox box : easeBoxes) {
+			box.setOnClickListener(new CheckBoxClickListener(easeBoxes));
+		}
+
+		// Iterate through role CheckBoxes adding appropriate listeners
+		for (CheckBox box : roleBoxes) {
+			box.setOnClickListener(new CheckBoxClickListener(roleBoxes));
 		}
 		
-		// The above is repeated for the other 3 array lists of checkboxes
-		for (CheckBox box : attack_boxes) {
-			box.setOnClickListener(new CheckBox.OnClickListener() {
-				public void onClick(View v) {
-					CheckBox selected_box = (CheckBox) v;
-					for (CheckBox cbox : attack_boxes) {
-						if (cbox.getId() != selected_box.getId()) {
-							cbox.setChecked(false);
-						}
-						
-					}
-					checkBoxes();
-					mCallback.onFilterSelected(query, search.getText().toString());
-				}
-			});
-		}
-		
-		for (CheckBox box : ease_boxes) {
-			box.setOnClickListener(new CheckBox.OnClickListener() {
-				public void onClick(View v) {
-					CheckBox selected_box = (CheckBox) v;
-					for (CheckBox cbox : ease_boxes) {
-						if (cbox.getId() != selected_box.getId()) {
-							cbox.setChecked(false);
-						}
-					}
-					checkBoxes();
-					Log.d("q", query[3]);
-					mCallback.onFilterSelected(query, search.getText().toString());
-				}
-			});
-		}
-		
-		for (CheckBox box : role_boxes) {
-			box.setOnClickListener(new CheckBox.OnClickListener() {
-				public void onClick(View v) {
-					CheckBox selected_box = (CheckBox) v;
-					for (CheckBox cbox : role_boxes) {
-						if (cbox.getId() != selected_box.getId()) {
-							cbox.setChecked(false);
-						}
-					}
-					checkBoxes();
-					mCallback.onFilterSelected(query, search.getText().toString());
-				}
-			});
-		}
-		
-		// Queries are also made whenever the user types a letter into the search field,
-		// these listeners allow for that.
+		// Add listener to search EditText, listens whenever text is changed
 		search.addTextChangedListener(new TextWatcher() {          
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {                                   
-            		// Use callback for query whenever a key is pressed
-            		mCallback.onFilterSelected(query, search.getText().toString());
-
+            public void onTextChanged(CharSequence s, int start, int before, int count) {  
+        		prev_query = new String[] { "", "", "", "", "" };
+        		// Use callback for query whenever a key is pressed
+        		applyFilter();
             }                       
+            
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count,
-                    int after) {
-                // TODO Auto-generated method stub                          
-            }                       
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            	// Do nothing
+            }
+            
             @Override
             public void afterTextChanged(Editable s) {
-                // TODO Auto-generated method stub                          
-
+                // Do nothing
             }
         });
+		
+		// Add listener to clear search button
+		Button clearSearch = (Button) v.findViewById(R.id.clear_search);
+		clearSearch.setOnClickListener(new OnClickListener() {
+			// Clear text on click
+			@Override
+			public void onClick(View v) {
+				search.setText("");
+			}
+		});
+		// Add listener to change button image, provides user feedback
+		clearSearch.setOnTouchListener(new OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if (event.getAction() == MotionEvent.ACTION_DOWN)
+					v.setBackgroundResource(R.drawable.ic_clear_highlighted);
+				else if (event.getAction() == MotionEvent.ACTION_CANCEL || event.getAction() == MotionEvent.ACTION_UP)
+					v.setBackgroundResource(R.drawable.ic_clear);
+				return false;
+			}
+			
+		});
 
 		return v;
+	}
+	
+	/**
+	 * CheckBoxClickListener: custom OnClickListener
+	 * 
+	 * sets other boxes in group to false
+	 * applies the filter
+	 *
+	 */
+	private class CheckBoxClickListener implements OnClickListener {
+		ArrayList<CheckBox> checkBoxGroup;
+		
+		public CheckBoxClickListener(ArrayList<CheckBox> checkBoxGroup) {
+			this.checkBoxGroup = checkBoxGroup;
+		}
+		
+		@Override
+		public void onClick(View v) {
+			prev_query = new String[] { "", "", "", "", "" };
+			
+			CheckBox selected_box = (CheckBox) v;
+			for (CheckBox cbox : checkBoxGroup) {
+				if (cbox.getId() != selected_box.getId()) {
+					cbox.setChecked(false);
+				}
+			}
+			checkBoxes();
+			applyFilter();
+		}
 	}
 	
 	/** 
@@ -221,9 +237,8 @@ public class FilterFragment extends Fragment {
 		query = new String[] { "", "", "", "", "" };
 		
 		// Iterate through the check boxes on the first row
-		for (CheckBox box : focus_boxes) {
-			// If a box is checked, use the value of its string as
-			// the query to the database.
+		for (CheckBox box : focusBoxes) {
+			// If a box is checked, use the value of its string as the query to the database.
 			if(box.isChecked()) {
 				Button text_getter = (Button) box;
 				// The first index of the query array is for the focus category
@@ -231,19 +246,19 @@ public class FilterFragment extends Fragment {
 			}
 		}
 		// The above is repeated for each category (attack, ease and role)
-		for (CheckBox box : attack_boxes) {
+		for (CheckBox box : attackBoxes) {
 			if(box.isChecked()) {
 				Button text_getter = (Button) box;
 				query[2] = text_getter.getText().toString();
 			}
 		}
-		for (CheckBox box : ease_boxes) {
+		for (CheckBox box : easeBoxes) {
 			if(box.isChecked()) {
 				Button text_getter = (Button) box;
 				query[3] = text_getter.getText().toString();
 			}
 		}
-		for (CheckBox box : role_boxes) {
+		for (CheckBox box : roleBoxes) {
 			if(box.isChecked()) {
 				Button text_getter = (Button) box;
 				query[4] = text_getter.getText().toString();
@@ -260,11 +275,56 @@ public class FilterFragment extends Fragment {
 	public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        try {
-            mCallback = (OnFilterSelectedListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFilterSelectedListener");
-        }
+        mCallback = (OnFilterSelectedListener) activity;
     }
+	
+	/**
+	 * applyFilter: applies the filter to the list
+	 * 
+	 * @param void
+	 * @return void
+	 */
+	public void applyFilter() {
+		mCallback.onFilterSelected(query, search.getText().toString());
+	}
+	
+	/**
+	 * clearFilter: applies clear filter to the list
+	 * 
+	 * @param void
+	 * @return void
+	 */
+	public void alternateFilter() {
+		// Prepare current filter options for saving
+		String[] current_query = query;
+		String current_search = search.getText().toString();
+		
+		// Load previous filter options
+		query = prev_query;
+		search.setText(prev_search);
+		search.setSelection(prev_search.length());
+		
+		// Check / uncheck focus boxes
+		for (CheckBox box : focusBoxes) {
+			Log.d("box name",box.getText().toString());
+			if (box.getText().toString().equals(query[1])) box.setChecked(true);
+			else box.setChecked(false);
+		}
+		for (CheckBox box : attackBoxes) {
+			if (box.getText().toString().equals(query[2])) box.setChecked(true);
+			else box.setChecked(false);
+		}
+		for (CheckBox box : easeBoxes) {
+			if (box.getText().toString().equals(query[3])) box.setChecked(true);
+			else box.setChecked(false);
+		}
+		for (CheckBox box : roleBoxes) {
+			if (box.getText().toString().equals(query[4])) box.setChecked(true);
+			else box.setChecked(false);
+		}
+		
+		// Save filter options
+		prev_query = current_query;
+		prev_search = current_search;
+	}
 }
