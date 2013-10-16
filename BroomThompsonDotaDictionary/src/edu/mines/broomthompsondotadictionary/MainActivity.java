@@ -56,6 +56,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 import edu.mines.broomthompsondotadictionary.FilterFragment.OnFilterSelectedListener;
 import edu.mines.broomthompsondotadictionary.NamesFragment.OnHeroSelectedListener;
 
@@ -76,6 +77,7 @@ public class MainActivity extends FragmentActivity implements
 	// names and filter fragments
 	NamesFragment n_frag;
 	FilterFragment f_frag;
+	boolean succeeded = true;
 
 	// local variables
 	String url_name;
@@ -166,9 +168,11 @@ public class MainActivity extends FragmentActivity implements
 					} catch (IOException e) {
 						Log.e(getString(R.string.app_name),"Failed to get stream form html");
 						e.printStackTrace();
+						succeeded = false;
 					} catch (Exception e) {
 						Log.e(getString(R.string.app_name),"Error with html");
 						e.printStackTrace();
+						succeeded = false;
 					} finally {
 						// close url connection
 						urlConnection.disconnect();
@@ -183,14 +187,15 @@ public class MainActivity extends FragmentActivity implements
 			} catch (InterruptedException e) {
 				Log.e(getString(R.string.app_name),"Interrupted when trying to join threads");
 				e.printStackTrace();
+				succeeded = false;
 				finish();
 			}
 		} catch (Exception e) {
 			Log.e(getString(R.string.app_name),"Failed to run thread to get data");
 			e.printStackTrace();
+			succeeded = false;
 		}
-		
-		
+
 		// Dismiss progress dialog
 		progressDialog.dismiss();
 		
@@ -207,7 +212,12 @@ public class MainActivity extends FragmentActivity implements
 		}
 		// Create database
 		source.open();
-
+		
+		if(succeeded) {
+			Toast toast = Toast.makeText(this, getResources().getString(R.string.bad_request), Toast.LENGTH_LONG*10);
+			toast.show();
+			return new ArrayAdapter<Hero> (this, android.R.layout.simple_list_item_1);
+		}
 
 		// Add data to database
 		String[] heroes = data.split("\n");
@@ -261,9 +271,6 @@ public class MainActivity extends FragmentActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
-		case R.id.menu_quit:
-			finish();
-			return true;
 		case R.id.menu_refresh:
 			// load adapter
 			adapter = load_new_adapter();

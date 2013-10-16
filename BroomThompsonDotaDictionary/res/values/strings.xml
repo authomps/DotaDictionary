@@ -34,5 +34,6 @@
     <string name="http_empty_dialog_title">Data Empty</string>
     <string name="http_empty_dialog_message">Did not get any data.  List did not update.</string>
     <string name="http_empty_dialog_button">OK</string>
+    <string name="bad_request">Error loading content from online database.</string>
 
 </resources>

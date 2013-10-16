@@ -183,9 +183,6 @@ public class HeroFragment extends Fragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
-		case R.id.menu_quit:
-			getActivity().finish();
-			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
