@@ -1,0 +1,6 @@
+# local config files
+local.properties
+
+# generated files
+bin/
+gen/

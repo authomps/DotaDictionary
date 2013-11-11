@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Dota Dictionary</string>
+    <string name="menu_quit">Quit</string>
+    <string name="menu_refresh">Refresh</string>
+    <string name="focus">Focus:</string>
+    <string name="focus_int">Intelligence</string>
+    <string name="focus_str">Strength</string>
+    <string name="focus_agi">Agility</string>
+    <string name="attack">Attack:</string>
+    <string name="attack_melee">Melee</string>
+    <string name="attack_rng">Ranged</string>
+    <string name="ease">Ease of Use:</string>
+    <string name="role">Role:</string>
+    <string name="easy">Easy</string>
+    <string name="medium">Medium</string>
+    <string name="hard">Hard</string>
+    <string name="support">Support</string>
+    <string name="carry">Carry</string>
+    <string name="ganker">Ganker</string>
+    <string name="portrait_img">Hero Portrait</string>
+    <string name="focus_img">Focus Type</string>
+    <string name="attack_img">Attack Type</string>
+    <string name="search">Search</string>
+    <string name="url">https://docs.google.com/spreadsheet/pub?key=0ApYAGkG5V1-NdEdXLTJMdjR2MEdKRUJ1MWs0alRkRVE&amp;single=true&amp;gid=2&amp;output=csv</string>
+    <string name="empty_string"></string>
+    <color name="white">#FFFFFF</color>
+    <color name="red">#D5431E</color>
+    <color name="transparent">#80000000</color>
+    <color name="pressed_dota">#CCD5431E</color>
+    <string name="progress_dialog_title">Loading</string>
+    <string name="progress_dialog_message">Connecting to url</string>
+    <string name="http_empty_dialog_title">Data Empty</string>
+    <string name="http_empty_dialog_message">Did not get any data.  List did not update.</string>
+    <string name="http_empty_dialog_button">OK</string>
+    <string name="bad_request">Error loading content from online database.</string>
+
+</resources>

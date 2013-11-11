@@ -1,0 +1,112 @@
+<resources>
+
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <style name="AppBaseTheme" parent="android:Theme.Holo">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+
+ 	 <style name="Theme_Dota" parent="android:Theme.Holo">
+
+	    <item name="android:editTextStyle">@style/EditTextDota</item>
+	    <item name="android:checkboxStyle">@style/CheckBoxDota</item>
+	    <item name="android:buttonStyleToggle">@style/ToggleDota</item>
+	    <item name="android:listViewStyle">@style/ListViewDota</item>
+	    <item name="android:listViewWhiteStyle">@style/ListViewDota.White</item>
+	    <item name="android:spinnerItemStyle">@style/SpinnerItemDota</item>
+	    
+	    <item name="android:actionBarItemBackground">@drawable/selectable_background_dota</item>
+	    <item name="android:popupMenuStyle">@style/PopupMenu.Dota</item>
+	    <item name="android:dropDownListViewStyle">@style/DropDownListView.Dota</item>
+	    <item name="android:actionBarTabStyle">@style/ActionBarTabStyle.Dota</item>
+	    <item name="android:actionDropDownStyle">@style/DropDownNav.Dota</item>
+	    <item name="android:actionBarStyle">@style/ActionBar.Transparent.Dota</item>
+	    <item name="android:actionModeBackground">@drawable/cab_background_top_dota</item>
+	    <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_dota</item>
+	    <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Dota</item>
+
+  	</style>
+  	
+    <style name="ActionBar.Solid.Dota" parent="@android:style/Widget.Holo.ActionBar.Solid">
+        <item name="android:background">@drawable/ab_solid_dota</item>
+        <item name="android:backgroundStacked">@drawable/ab_stacked_solid_dota</item>
+        <item name="android:backgroundSplit">@drawable/ab_bottom_solid_dota</item>
+        <item name="android:progressBarStyle">@style/ProgressBar.Dota</item>
+    </style>
+
+    <style name="ActionBar.Transparent.Dota" parent="@android:style/Widget.Holo.ActionBar">
+        <item name="android:background">@drawable/ab_transparent_dota</item>
+        <item name="android:progressBarStyle">@style/ProgressBar.Dota</item>
+    </style>
+
+    <style name="PopupMenu.Dota" parent="@android:style/Widget.Holo.ListPopupWindow">
+        <item name="android:popupBackground">@drawable/menu_dropdown_panel_dota</item>
+    </style>
+
+    <style name="DropDownListView.Dota" parent="@android:style/Widget.Holo.ListView.DropDown">
+        <item name="android:listSelector">@drawable/selectable_background_dota</item>
+    </style>
+
+    <style name="ActionBarTabStyle.Dota" parent="@android:style/Widget.Holo.ActionBar.TabView">
+        <item name="android:background">@drawable/tab_indicator_ab_dota</item>
+    </style>
+
+    <style name="DropDownNav.Dota" parent="@android:style/Widget.Holo.Spinner">
+        <item name="android:background">@drawable/spinner_background_ab_dota</item>
+        <item name="android:popupBackground">@drawable/menu_dropdown_panel_dota</item>
+        <item name="android:dropDownSelector">@drawable/selectable_background_dota</item>
+    </style>
+
+    <style name="ProgressBar.Dota" parent="@android:style/Widget.Holo.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/progress_horizontal_dota</item>
+    </style>
+
+    <style name="ActionButton.CloseMode.Dota" parent="@android:style/Widget.Holo.ActionButton.CloseMode">
+        <item name="android:background">@drawable/btn_cab_done_dota</item>
+    </style>
+
+    <!-- this style is only referenced in a Light.DarkActionBar based theme -->
+    <style name="Theme.Dota.Widget" parent="@android:style/Theme.Holo">
+        <item name="android:popupMenuStyle">@style/PopupMenu.Dota</item>
+        <item name="android:dropDownListViewStyle">@style/DropDownListView.Dota</item>
+    </style>
+    
+  <style name="EditTextDota" parent="android:Widget.EditText">
+	  <item name="android:background">@drawable/edit_text_holo_dark</item>
+	  <item name="android:textColor">#ffffff</item>
+  </style>
+
+  <style name="CheckBoxDota" parent="android:Widget.CompoundButton.CheckBox">
+      <item name="android:button">@drawable/btn_check_holo_dark</item>
+  </style>
+
+  <style name="ToggleDota" parent="android:Widget.Button.Toggle">
+      <item name="android:background">@drawable/btn_toggle_holo_dark</item>
+      <item name="android:minHeight">48dip</item>
+	  <item name="android:textColor">#ffffff</item>
+  </style>
+
+  <style name="ListViewDota" parent="android:Widget.ListView">
+      <item name="android:listSelector">@drawable/list_selector_holo_dark</item>
+  </style>
+
+  <style name="ListViewDota.White" parent="android:Widget.ListView.White">
+      <item name="android:listSelector">@drawable/list_selector_holo_dark</item>
+  </style>
+
+  <style name="SpinnerItemDota" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
+      <item name="android:textColor">#ffffff</item>
+  </style>
+
+</resources>
