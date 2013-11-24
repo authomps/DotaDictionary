@@ -23,6 +23,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 	public static final String COLUMN_USE = "use";
 	public static final String COLUMN_ROLE = "role";
 	public static final String COLUMN_PIC = "picture";
+	public static final String COLUMN_ABILITIES = "abilities";
 	
 	
 	private static final String DATABASE_NAME = "heroes.db";
@@ -37,7 +38,8 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 			+ COLUMN_ATTACK + " text not null, " 
 			+ COLUMN_USE + " text not null, " 
 			+ COLUMN_ROLE + " text not null, "
-			+ COLUMN_PIC + " text not null);";
+			+ COLUMN_PIC + " text not null, "
+			+ COLUMN_ABILITIES + " text not null);";
 
 	/** 
 	 * SQLiteHelper: creates the object 

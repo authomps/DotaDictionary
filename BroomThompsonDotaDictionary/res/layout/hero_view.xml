@@ -20,6 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="16dp"
+            android:paddingBottom="0dp"
             android:textSize="36sp" />
 
         <LinearLayout
@@ -54,4 +55,42 @@
         android:layout_height="wrap_content"
         android:textSize="18sp"
 		android:paddingLeft="36dp"/>
+    
+    <ScrollView
+        android:id="@+id/abilities_scroll"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        >
+    <LinearLayout
+        android:id="@+id/abilities"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+    </LinearLayout>
+    </ScrollView>
+
+    <!-- <TextView
+        android:id="@+id/ability1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+		android:paddingLeft="36dp"/>
+    <TextView
+        android:id="@+id/ability2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+		android:paddingLeft="36dp"/>
+    <TextView
+        android:id="@+id/ability3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+		android:paddingLeft="36dp"/>
+    <TextView
+        android:id="@+id/ability4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+		android:paddingLeft="36dp"/> -->
 </LinearLayout>

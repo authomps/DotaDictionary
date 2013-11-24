@@ -11,9 +11,17 @@ public class Hero {
 	// id of each hero, used for database management
 	private long id;
 	// each heroe's attributes as well as a picture string, which should contain a url to download the image
-	private String name, focus, attack, use, role, picture;
-	
+	private String name, focus, attack, use, role, picture, abilities;
+
 	// Getters and Setters
+	public String getAbilities() {
+		return abilities;
+	}
+
+	public void setAbilities(String abilities) {
+		this.abilities = abilities;
+	}
+
 	public String getPicture() {
 		return picture;
 	}

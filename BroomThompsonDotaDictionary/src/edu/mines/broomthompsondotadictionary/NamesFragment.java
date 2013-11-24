@@ -71,6 +71,10 @@ public class NamesFragment extends ListFragment {
     @Override
     public void onStart() {
         super.onStart();
+        
+        if (getFragmentManager().findFragmentById(R.id.large_layout) != null) {
+            getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        }
     }
 
 	/** 
@@ -95,7 +99,11 @@ public class NamesFragment extends ListFragment {
 	 */ 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-    	TextView view = (TextView) v;
-        mCallback.onHeroSelected(view.getText().toString());
+    	if (MainActivity.customView) {
+    		mCallback.onHeroSelected(CustomHeroAdapter.heroes.get(position).toString());
+    	} else {
+	    	TextView view = (TextView) v;
+	        mCallback.onHeroSelected(view.getText().toString());
+    	}
     }
 }

@@ -28,7 +28,8 @@ public class HeroesDataSource {
 	// to indicate that we want all data associated with an entry.
 	private String[] data = { SQLiteHelper.COLUMN_ID, SQLiteHelper.COLUMN_NAME, 
 			SQLiteHelper.COLUMN_FOCUS, SQLiteHelper.COLUMN_ATTACK, 
-			SQLiteHelper.COLUMN_USE, SQLiteHelper.COLUMN_ROLE, SQLiteHelper.COLUMN_PIC };
+			SQLiteHelper.COLUMN_USE, SQLiteHelper.COLUMN_ROLE, SQLiteHelper.COLUMN_PIC,
+			SQLiteHelper.COLUMN_ABILITIES};
 
 	/** 
 	 * HeroesDataSource: Initializes the helper.
@@ -79,6 +80,7 @@ public class HeroesDataSource {
 		vals.put(SQLiteHelper.COLUMN_USE, attrs[3]);
 		vals.put(SQLiteHelper.COLUMN_ROLE, attrs[4]);
 		vals.put(SQLiteHelper.COLUMN_PIC, attrs[5]);
+		vals.put(SQLiteHelper.COLUMN_ABILITIES, attrs[6]);
 		
 		// Insert the entry, returns the id of the row in the database
 		long heroId = database.insert(SQLiteHelper.TABLE_HEROES, null, vals);
@@ -189,6 +191,7 @@ public class HeroesDataSource {
 		hero.setUse(cursor.getString(4));
 		hero.setRole(cursor.getString(5));
 		hero.setPicture(cursor.getString(6));
+		hero.setAbilities(cursor.getString(7));
 		return hero;
 	}
 	

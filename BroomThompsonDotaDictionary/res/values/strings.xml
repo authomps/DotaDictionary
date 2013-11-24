@@ -35,5 +35,7 @@
     <string name="http_empty_dialog_message">Did not get any data.  List did not update.</string>
     <string name="http_empty_dialog_button">OK</string>
     <string name="bad_request">Error loading content from online database.</string>
+    <string name="row_portrait">Hero Image</string>
+    <string name="menu_theme">Change Theme</string>
 
 </resources>

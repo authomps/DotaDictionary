@@ -92,7 +92,6 @@ public class FilterFragment extends Fragment {
 	 */ 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
 		// Initialize containers of check boxes
 		focusBoxes = new ArrayList<CheckBox>();
 		attackBoxes = new ArrayList<CheckBox>();

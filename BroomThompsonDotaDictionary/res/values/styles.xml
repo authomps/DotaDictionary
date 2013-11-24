@@ -16,6 +16,27 @@
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
+    
+    <style name="Theme_Dota_Light" parent="android:Theme.Holo.Light">
+
+	    <item name="android:editTextStyle">@style/EditTextDota</item>
+	    <item name="android:checkboxStyle">@style/CheckBoxDota</item>
+	    <item name="android:buttonStyleToggle">@style/ToggleDota</item>
+	    <item name="android:listViewStyle">@style/ListViewDota</item>
+	    <item name="android:listViewWhiteStyle">@style/ListViewDota.White</item>
+	    <item name="android:spinnerItemStyle">@style/SpinnerItemDota</item>
+	    
+	    <item name="android:actionBarItemBackground">@drawable/selectable_background_dota</item>
+	    <item name="android:popupMenuStyle">@style/PopupMenu.Dota</item>
+	    <item name="android:dropDownListViewStyle">@style/DropDownListView.Dota</item>
+	    <item name="android:actionBarTabStyle">@style/ActionBarTabStyle.Dota</item>
+	    <item name="android:actionDropDownStyle">@style/DropDownNav.Dota</item>
+	    <item name="android:actionBarStyle">@style/ActionBar.Transparent.Dota</item>
+	    <item name="android:actionModeBackground">@drawable/cab_background_top_dota</item>
+	    <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_dota</item>
+	    <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Dota</item>
+
+  	</style>
 
  	 <style name="Theme_Dota" parent="android:Theme.Holo">
 
