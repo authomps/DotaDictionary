@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/abilities_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+<LinearLayout 
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical" >
 
     <ImageView
@@ -21,7 +26,7 @@
             android:orientation="vertical" >
 
             <TextView
-                android:id="@+id/name"
+                android:id="@+id/name_hero"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="16dp"
@@ -64,10 +69,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <ScrollView
-        android:id="@+id/abilities_scroll"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+    
 
         <LinearLayout
             android:id="@+id/abilities"
@@ -75,6 +77,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
         </LinearLayout>
-    </ScrollView>
+    
 
 </LinearLayout>
+</ScrollView>

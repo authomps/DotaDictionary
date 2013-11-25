@@ -142,7 +142,7 @@ public class HeroFragment extends Fragment {
 		}
 
 		// Set the name text view
-		TextView name_view = (TextView) getActivity().findViewById(R.id.name);
+		TextView name_view = (TextView) getActivity().findViewById(R.id.name_hero);
 		if (hero.getName().length() > 13
 				&& getActivity().findViewById(R.id.fragment_container) != null) {
 			name_view.setTextSize(24);
