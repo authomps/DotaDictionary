@@ -1,5 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:id="@+id/menu_theme" android:title="@string/menu_theme" android:icon="@drawable/ic_menu_theme" android:showAsAction="ifRoom"></item><item android:id="@+id/menu_refresh" android:title="@string/menu_refresh" android:showAsAction="always" android:icon="@drawable/ic_action_refresh"></item>
+    <item android:id="@+id/menu_custom" android:title="@string/menu_custom" android:showAsAction="collapseActionView" android:icon="@drawable/ic_menu_custom"></item><item android:id="@+id/menu_theme" android:title="@string/menu_theme" android:icon="@drawable/ic_menu_theme" android:showAsAction="ifRoom"></item>
+    <item android:id="@+id/menu_refresh" android:title="@string/menu_refresh" android:showAsAction="always" android:icon="@drawable/ic_action_refresh"></item>
     
 
 </menu>

@@ -50,8 +50,8 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -59,6 +59,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
@@ -77,14 +78,19 @@ public class MainActivity extends FragmentActivity implements
 	static String[] names;
 	static HeroesDataSource source;
 	static ArrayAdapter<Hero> adapter;
+	static ArrayAdapter<Hero> other_adapter;
 
 	// Options
-	static boolean customView;
+	static boolean customView = true;
+	static boolean themeDark = true;
+
+	// Checks
+	boolean succeeded;
+	boolean inSplash;
 
 	// names and filter fragments
 	NamesFragment n_frag;
 	FilterFragment f_frag;
-	boolean succeeded = true;
 
 	// local variables
 	String url_name;
@@ -106,38 +112,71 @@ public class MainActivity extends FragmentActivity implements
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		// setContentView(R.layout.splash);
-		setContentView(R.layout.activity_main);
-		if (findViewById(R.id.fragment_container) != null) {
-			this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		} else {
-			this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-		}
+		super.onCreate(null);
 
 		// Check if previous state is being restored
 		if (savedInstanceState != null) {
 			return;
 		}
 
-		// Set booleans
-		customView = true;
+		// Set theme
+		if (themeDark)
+			setTheme(R.style.Theme_Dota);
+		else
+			setTheme(R.style.Theme_Dota_Light);
 
-		// get_adapter
-		adapter = load_new_adapter();
-		// create fragments
-		n_frag = new NamesFragment();
-		n_frag.setArguments(getIntent().getExtras());
-		f_frag = new FilterFragment();
-		f_frag.setArguments(getIntent().getExtras());
+		// Hide soft input unless search view checked
+		this.getWindow().setSoftInputMode(
+				WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-		// add fragments to activity
-		FragmentManager frag_man = getSupportFragmentManager();
-		FragmentTransaction frag_trans = frag_man.beginTransaction();
-		frag_trans.add(R.id.fragment_container_top, f_frag);
-		frag_trans.add(R.id.fragment_container_bottom, n_frag);
-		frag_trans.commit();
+		setContentView(R.layout.splash);
 
+		// Lock screen orientation
+		if (findViewById(R.id.fragment_container) != null) {
+			this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		} else {
+			this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		}
+
+		// Set checks
+		succeeded = true;
+		inSplash = true;
+
+		new AsyncTask<Void, Void, Void>() {
+
+			@Override
+			protected Void doInBackground(Void... params) {
+				// get_adapter
+				load_new_adapter();
+
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(Void result) {
+				Log.e("async", "testing");
+
+				setContentView(R.layout.activity_main);
+
+				// create fragments
+				n_frag = new NamesFragment();
+				n_frag.setArguments(getIntent().getExtras());
+				f_frag = new FilterFragment();
+				f_frag.setArguments(getIntent().getExtras());
+
+				// add fragments to activity
+				FragmentManager frag_man = getSupportFragmentManager();
+				FragmentTransaction frag_trans = frag_man.beginTransaction();
+				frag_trans.add(R.id.fragment_container_top, f_frag);
+				frag_trans.add(R.id.fragment_container_bottom, n_frag);
+				frag_trans.commit();
+				
+				// Create options menu
+				inSplash = false;
+				invalidateOptionsMenu();
+			}
+
+		}.execute();
 	}
 
 	/**
@@ -147,76 +186,45 @@ public class MainActivity extends FragmentActivity implements
 	 * @return: ArrayAdapter containing an array of Hero class that will
 	 *          populate the ListFragment NamesFragment
 	 */
-	private ArrayAdapter<Hero> load_new_adapter() {
-		// Display loading
-		ProgressDialog progressDialog = new ProgressDialog(this);
-		progressDialog.setTitle(getResources().getString(
-				R.string.progress_dialog_title));
-		progressDialog.setMessage(getResources().getString(
-				R.string.progress_dialog_message));
-		progressDialog.setCancelable(false);
-		progressDialog.show();
+	private void load_new_adapter() {
+		if (adapter != null)
+			return;
 
 		// Initialize url and data
 		url_name = getString(R.string.url);
 		data = getString(R.string.empty_string);
 
-		// Start new thread to download html
+		HttpURLConnection urlConnection = null;
 		try {
-			Thread trd = new Thread(new Runnable() {
-				@Override
-				public void run() {
-					HttpURLConnection urlConnection = null;
-					try {
-						URL url = new URL(url_name);
-						urlConnection = (HttpURLConnection) url
-								.openConnection();
-						urlConnection.getInputStream();
-						BufferedInputStream in = new BufferedInputStream(
-								urlConnection.getInputStream());
-						setData(readStream(in));
-					} catch (IOException e) {
-						Log.e(getString(R.string.app_name),
-								"Failed to get stream form html");
-						e.printStackTrace();
-						succeeded = false;
-					} catch (Exception e) {
-						Log.e(getString(R.string.app_name), "Error with html");
-						e.printStackTrace();
-						succeeded = false;
-					} finally {
-						// close url connection
-						urlConnection.disconnect();
-					}
-				}
-			});
-			trd.start();
-
-			// Wait for thread to finish
-			try {
-				trd.join();
-			} catch (InterruptedException e) {
-				Log.e(getString(R.string.app_name),
-						"Interrupted when trying to join threads");
-				e.printStackTrace();
-				succeeded = false;
-				finish();
-			}
-		} catch (Exception e) {
+			URL url = new URL(url_name);
+			urlConnection = (HttpURLConnection) url.openConnection();
+			urlConnection.getInputStream();
+			BufferedInputStream in = new BufferedInputStream(
+					urlConnection.getInputStream());
+			setData(readStream(in));
+		} catch (IOException e) {
 			Log.e(getString(R.string.app_name),
-					"Failed to run thread to get data");
+					"Failed to get stream form html");
 			e.printStackTrace();
 			succeeded = false;
+		} catch (Exception e) {
+			Log.e(getString(R.string.app_name), "Error with html");
+			e.printStackTrace();
+			succeeded = false;
+		} finally {
+			// close url connection
+			urlConnection.disconnect();
 		}
 
-		// Dismiss progress dialog
-		progressDialog.dismiss();
+		Log.e("after html", "hi");
 
 		if (data.equals("")) {
-			htmlEmptyDialog.show();
+			// htmlEmptyDialog.show();
 			if (adapter != null)
-				return adapter;
+				return;
 		}
+
+		Log.e("after data check", "hi");
 
 		// Initialize database source
 		source = new HeroesDataSource(this);
@@ -227,14 +235,20 @@ public class MainActivity extends FragmentActivity implements
 		// Create database
 		source.open();
 
+		Log.e("after source", "hi");
+
 		if (!succeeded) {
 			Toast toast = Toast.makeText(this,
 					getResources().getString(R.string.bad_request),
 					Toast.LENGTH_LONG * 10);
 			toast.show();
-			return new ArrayAdapter<Hero>(this,
+			adapter = new ArrayAdapter<Hero>(this,
 					android.R.layout.simple_list_item_1);
+			// other_adapter = adapter;
+			return;
 		}
+
+		Log.e("after succed", "hi");
 
 		// Add data to database
 		String[] heroes = data.split("\n");
@@ -245,13 +259,18 @@ public class MainActivity extends FragmentActivity implements
 		// Get list of heroes from database
 		List<Hero> list = source.getAllHeroes();
 
+		// Set adapter and other_adapter
 		if (customView) {
-			// Create CustomHeroAdapter for list
-			return new CustomHeroAdapter(this,
+			// Create CustomHeroAdapter for adapter
+			adapter = new CustomHeroAdapter(this,
+					android.R.layout.simple_list_item_1, list);
+			other_adapter = new ArrayAdapter<Hero>(this,
 					android.R.layout.simple_list_item_1, list);
 		} else {
-			// Create ArrayAdapter for list
-			return new ArrayAdapter<Hero>(this,
+			// Create ArrayAdapter for adapter
+			adapter = new ArrayAdapter<Hero>(this,
+					android.R.layout.simple_list_item_1, list);
+			other_adapter = new CustomHeroAdapter(this,
 					android.R.layout.simple_list_item_1, list);
 		}
 	}
@@ -280,6 +299,9 @@ public class MainActivity extends FragmentActivity implements
 	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		// Do not inflate the menu if in splash screen
+		if (inSplash) return false;
+		
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
@@ -307,20 +329,59 @@ public class MainActivity extends FragmentActivity implements
 			return true;
 		case R.id.menu_refresh:
 			// load adapter
-			adapter = load_new_adapter();
+			adapter = null;
+
+			 // Display loading
+			 final ProgressDialog progressDialog = new ProgressDialog(this);
+			 progressDialog.setTitle(getResources().getString(
+			 R.string.progress_dialog_title));
+			 progressDialog.setMessage(getResources().getString(
+			 R.string.progress_dialog_message));
+			 progressDialog.setCancelable(false);
+			 progressDialog.show();
+			
+			new AsyncTask<Void, Void, Void>() {
+
+				@Override
+				protected Void doInBackground(Void... params) {
+					// get_adapter
+					load_new_adapter();
+
+					return null;
+				}
+
+				@Override
+				protected void onPostExecute(Void result) {
+					f_frag.applyFilter();
+
+					 // Dismiss progress dialog
+					 progressDialog.dismiss();
+				}
+			}.execute();
+
+			return true;
+		case R.id.menu_custom:
+			// Switch view
+			customView = !customView;
+
+			// Switch adapters
+			ArrayAdapter<Hero> temp = adapter;
+			adapter = other_adapter;
+			other_adapter = temp;
 
 			// Create new names fragment
 			f_frag.applyFilter();
+			f_frag.alternateFilter(); // TODO move to own list
 
 			return true;
 		case R.id.menu_theme:
-			customView = !customView;
+			// switch themes
+			themeDark = !themeDark;
 			// load adapter
-			adapter = load_new_adapter();
+			adapter = null;
 
-			// Create new names fragment
-			f_frag.applyFilter();
-
+			finish();
+			startActivity(getIntent());
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

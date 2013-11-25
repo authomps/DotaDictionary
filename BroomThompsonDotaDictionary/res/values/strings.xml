@@ -37,5 +37,6 @@
     <string name="bad_request">Error loading content from online database.</string>
     <string name="row_portrait">Hero Image</string>
     <string name="menu_theme">Change Theme</string>
+    <string name="menu_custom">Alternate List View</string>
 
 </resources>
