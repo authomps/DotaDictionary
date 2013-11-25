@@ -50,6 +50,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -383,6 +384,54 @@ public class MainActivity extends FragmentActivity implements
 			finish();
 			startActivity(getIntent());
 			return true;
+		case R.id.menu_help:
+			
+			AlertDialog.Builder helpDialogBuilder = new AlertDialog.Builder(this);
+	 
+				// set title
+			helpDialogBuilder.setTitle("Help");
+			
+			helpDialogBuilder
+			.setMessage(getResources().getString(R.string.help_contents))
+			.setCancelable(false)
+			.setPositiveButton("Dismiss",new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog,int id) {
+					dialog.cancel();
+				}
+			  });
+
+			// create alert dialog
+			AlertDialog helpDialog = helpDialogBuilder.create();
+
+			// show it
+			helpDialog.show();
+		
+			return true;
+			
+		case R.id.menu_about:
+			
+			AlertDialog.Builder aboutDialogBuilder = new AlertDialog.Builder(this);
+	 
+				// set title
+			aboutDialogBuilder.setTitle("About");
+			
+			aboutDialogBuilder
+			.setMessage(getResources().getString(R.string.about_contents))
+			.setCancelable(false)
+			.setPositiveButton("Dismiss",new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog,int id) {
+					dialog.cancel();
+				}
+			  });
+
+			// create alert dialog
+			AlertDialog aboutDialog = aboutDialogBuilder.create();
+
+			// show it
+			aboutDialog.show();
+		
+			return true;	
+			
 		default:
 			return super.onOptionsItemSelected(item);
 		}

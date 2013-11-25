@@ -15,13 +15,28 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
-        <TextView
-            android:id="@+id/name"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:paddingBottom="0dp"
-            android:textSize="36sp" />
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="0dp"
+                android:textSize="36sp" />
+
+            <TextView
+                android:id="@+id/role_use_hero"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:paddingLeft="20dp" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -36,7 +51,7 @@
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/focus_img"
                 android:gravity="right"
-                android:padding="10dp"/>
+                android:padding="10dp" />
 
             <ImageView
                 android:id="@+id/attack"
@@ -49,48 +64,17 @@
         </LinearLayout>
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/role_use"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-		android:paddingLeft="36dp"/>
-    
     <ScrollView
         android:id="@+id/abilities_scroll"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        >
-    <LinearLayout
-        android:id="@+id/abilities"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
-    </LinearLayout>
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:id="@+id/abilities"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+        </LinearLayout>
     </ScrollView>
 
-    <!-- <TextView
-        android:id="@+id/ability1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-		android:paddingLeft="36dp"/>
-    <TextView
-        android:id="@+id/ability2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-		android:paddingLeft="36dp"/>
-    <TextView
-        android:id="@+id/ability3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-		android:paddingLeft="36dp"/>
-    <TextView
-        android:id="@+id/ability4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-		android:paddingLeft="36dp"/> -->
 </LinearLayout>
