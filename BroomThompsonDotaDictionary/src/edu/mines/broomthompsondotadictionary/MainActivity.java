@@ -60,9 +60,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 import edu.mines.broomthompsondotadictionary.FilterFragment.OnFilterSelectedListener;
 import edu.mines.broomthompsondotadictionary.NamesFragment.OnHeroSelectedListener;
@@ -372,8 +374,16 @@ public class MainActivity extends FragmentActivity implements
 
 			// Create new names fragment
 			f_frag.applyFilter();
-			f_frag.alternateFilter(); // TODO move to own list
-
+			return true;
+		case R.id.menu_filter_alternate:
+			// Alternate filter choices
+			f_frag.alternateFilter();
+			return true;
+		case R.id.menu_filter_hide:
+			// Hide / show filter
+			FrameLayout fl = (FrameLayout) findViewById(R.id.fragment_container_top);
+			if (fl.getVisibility() == View.VISIBLE) fl.setVisibility(View.GONE);
+			else fl.setVisibility(View.VISIBLE);
 			return true;
 		case R.id.menu_theme:
 			// switch themes

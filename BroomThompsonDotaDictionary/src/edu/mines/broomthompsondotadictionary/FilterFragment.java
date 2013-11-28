@@ -193,6 +193,10 @@ public class FilterFragment extends Fragment {
 			}
 			
 		});
+		
+		// set text color for search
+		if (MainActivity.themeDark) search.setTextColor(getResources().getColor(android.R.color.white));
+		else search.setTextColor(getResources().getColor(android.R.color.black));
 
 		return v;
 	}

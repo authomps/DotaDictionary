@@ -62,8 +62,12 @@ public class HeroFragment extends Fragment {
 		if (savedInstanceState != null) {
 			mCurrentName = savedInstanceState.getString(ARG_ID);
 		}
+		
+		View v = inflater.inflate(R.layout.hero_view, container, false);
 
-		return inflater.inflate(R.layout.hero_view, container, false);
+		v.findViewById(R.id.abilities_scroll).setOverScrollMode(View.OVER_SCROLL_NEVER);
+		
+		return v;
 	}
 
 	/**
@@ -179,7 +183,6 @@ public class HeroFragment extends Fragment {
 		LinearLayout abilities_ll = (LinearLayout) getActivity().findViewById(
 				R.id.abilities);
 		abilities_ll.removeAllViews();
-		abilities_ll.setOverScrollMode(View.OVER_SCROLL_NEVER);
 		String[] abilities = hero.getAbilities().split(";");
 		for (int i = 0; i < abilities.length - 2; i = i + 3) {
 			// Create Row

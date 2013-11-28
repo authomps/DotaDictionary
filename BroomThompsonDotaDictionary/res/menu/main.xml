@@ -1,8 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:id="@+id/menu_custom" android:title="@string/menu_custom" android:icon="@drawable/ic_menu_custom"></item><item android:id="@+id/menu_theme" android:title="@string/menu_theme" android:icon="@drawable/ic_menu_theme" android:showAsAction="ifRoom"></item>
-    <item android:id="@+id/menu_refresh" android:title="@string/menu_refresh" android:showAsAction="always" android:icon="@drawable/ic_action_refresh"></item>
-    <item android:id="@+id/menu_help" android:title="@string/help_button" android:showAsAction="collapseActionView"></item>
-    <item android:id="@+id/menu_about" android:title="@string/about_button" android:showAsAction="collapseActionView"></item>
+    <item android:id="@+id/menu_filter_alternate" android:title="@string/menu_filter_alternate" android:icon="@drawable/ic_action_filter_alternate" android:showAsAction="ifRoom|collapseActionView"></item><item android:id="@+id/menu_filter_hide" android:title="@string/menu_filter_hide" android:icon="@drawable/ic_action_filter_hide" android:showAsAction="ifRoom|collapseActionView"></item><item android:id="@+id/menu_custom" android:title="@string/menu_custom" android:icon="@drawable/ic_menu_custom" android:showAsAction="ifRoom|collapseActionView"></item><item android:id="@+id/menu_refresh" android:title="@string/menu_refresh" android:showAsAction="always" android:icon="@drawable/ic_action_refresh"></item><item android:id="@+id/menu_theme" android:title="@string/menu_theme" android:icon="@drawable/ic_menu_theme" android:showAsAction="ifRoom|collapseActionView"></item>
+    
+    
+    <item android:id="@+id/menu_about" android:title="@string/about_button" android:showAsAction="collapseActionView"></item><item android:id="@+id/menu_help" android:title="@string/help_button" android:showAsAction="collapseActionView"></item>
+    
+    
     
 
 </menu>
